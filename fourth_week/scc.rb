@@ -1,3 +1,5 @@
+RubyVM::InstructionSequence.compile_option = {:tailcall_optimization => true, :trace_instruction => false}
+
 @graph = {}
 @rev_graph = {}
 
@@ -87,17 +89,19 @@ end
 
 @used_vertices = []
 
-def dfs_ii(v)
-  #puts 'v - ' + v.inspect
-  
-  @used_vertices << v
-  
-  @num_of_nodes[@leader] ||= 0
-  @num_of_nodes[@leader] += 1
-  
-  @finishing_graph[v].each do |i|
-    if ! @used_vertices.include?(i)
-      dfs_ii(i)
+eval <<end
+  def dfs_ii(v)
+    #puts 'v - ' + v.inspect
+    
+    @used_vertices << v
+    
+    @num_of_nodes[@leader] ||= 0
+    @num_of_nodes[@leader] += 1
+    
+    @finishing_graph[v].each do |i|
+      if ! @used_vertices.include?(i)
+        dfs_ii(i)
+      end
     end
   end
 end
