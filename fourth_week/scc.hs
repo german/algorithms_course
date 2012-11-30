@@ -18,7 +18,7 @@ main = do
 insertLinesToMap :: [String] -> Map.Map String [String] -> Map.Map String [String]
 insertLinesToMap [] map = map
 insertLinesToMap (line:xs) map =
-  insertLinesToMap xs (Map.insert (head splittedLine) (tail splittedLine) map)
+  insertLinesToMap xs (Map.insertWith (++) (head splittedLine) (tail splittedLine) map)
   where 
     splittedLine = filterLine(splitOn " " line)
 
