@@ -1,17 +1,21 @@
 jobs = []
 
-Job = Struct.new(:weight, :length)
+Job = Struct.new(:weight, :length, :k)
 
 File.open('./jobs.txt').each_with_index do |line, index|
   next if index == 0
-  weight, length = line.split(/\s+/)
-  jobs << Job.new(weight.strip.to_i, length.strip.to_i)
+  weight, length = line.split(/\s+/).map{|l| l.strip.to_i}
+  jobs << Job.new(weight, length, weight / length.to_f)
 end
 
 sorted_jobs = jobs.sort do |n, m|
-  k1 = n.weight / n.length.to_f
-  k2 = m.weight / m.length.to_f
-  k1 <=> k2
+  m.k <=> n.k
 end
 
-puts sorted_jobs.inject(0){|sum, j| sum += j.length}
+completion_time = 0
+sum = 0
+sorted_jobs.each do |j|
+  completion_time += j.length
+  sum += j.weight * completion_time
+end
+puts sum
